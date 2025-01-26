@@ -4,8 +4,11 @@ const {
   loginUser,
   registerUser,
 } = require("../controllers/users");
-const auth = require("../middlewares/auth");
+const { createStripeCustomer } = require("../controllers/stripe");
+const { auth } = require("../middlewares/auth");
 
 users.get("/me", auth, getCurrentUser);
-users.post("/", loginUser);
-users.post("/", registerUser);
+users.post("/login", loginUser);
+users.post("/signup", registerUser, createStripeCustomer);
+
+module.exports = users;

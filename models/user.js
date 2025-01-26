@@ -2,8 +2,10 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const { unauthorizedUserError } = require("../utils/errors");
+const stripeCustomerSchema = require("./stripeCustomer");
 
 const userSchema = new mongoose.Schema({
+  admin: { type: Boolean, require: false },
   username: {
     type: String,
     required: true,
@@ -19,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     unique: true,
   },
-  profilePicture: {
+  avatar: {
     type: String,
     validate: {
       validator: (v) => validator.isURL(v),
@@ -39,6 +41,7 @@ const userSchema = new mongoose.Schema({
     },
     required: true,
   },
+  stripeInfo: { type: stripeCustomerSchema, default: null }, // Stripe customer details
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
